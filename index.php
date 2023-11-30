@@ -22,27 +22,31 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 </head>
 </head>
 
-<body>
-    <div class="container-fluid bg-secondary">
-        <div class="container">
-            <div class="row bg-black p-4" style="height:10vh;">
-                <div class="col-6">
-                    <h2 class="text-light">Bienvenido, <?php echo $_SESSION['username']; ?>!</h2>
-                </div>
-                <div class="col-6">
-                    <a class="float-end mt-lg-2" href="logout.php">Cerrar sesión</a>
-                </div>
+<body class="bg-secondary">
+
+    <div class="container">
+        <div class="row bg-black" style="height:95px;">
+            <div class="col-6">
+                <h2 class="text-light m-4 pt-1">Bienvenido, <?php echo $_SESSION['username']; ?>!</h2>
             </div>
-            <div class="row bg-light" style="height:90vh;">
-                <div class="col-6">
-                    dasdsad
-                </div>
-                <div class="col-6">
-                    
-                </div>
+            <div class="col-6">
+                <a class="float-end m-4 pt-1" href="logout.php">Cerrar sesión</a>
+            </div>
+        </div>
+
+        <div class="row bg-light" style="height:90vh;">
+            <div class="col-6 w-50">
+                <ul class="list-group p-4 pt-lg-5 float-end">
+                    <li class="list-group-item text-center"><a class="btn btn-primary">Añadir entrada</a></li>
+                    <li class="list-group-item text-center"><a class="btn btn-primary">Listar entradas</a></li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <img class="img-fluid pt-5 pt-lg-3 w-50" src="monitor.png" />
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
