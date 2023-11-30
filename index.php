@@ -24,7 +24,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 <body class="bg-secondary">
 
-    <div class="container">
+    <div class="container bg-light" style="height: 100vh;">
         <div class="row bg-black" style="height:95px;">
             <div class="col-6">
                 <h2 class="text-light m-4 pt-1">Bienvenido, <?php echo $_SESSION['username']; ?>!</h2>
@@ -34,7 +34,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </div>
         </div>
 
-        <div class="row bg-light" style="height:90vh;">
+        <div class="row">
             <div class="col-6 w-50">
                 <ul class="list-group p-4 pt-lg-5 float-end">
                     <li class="list-group-item text-center"><a class="btn btn-primary">Añadir entrada</a></li>
