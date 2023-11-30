@@ -3,20 +3,22 @@ session_start();
 require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $nick = $_POST['nick'];
     $password = $_POST['password'];
 
     try {
-        $query = "SELECT * FROM usuarios WHERE username=:username AND password=:password";
+        $query = "SELECT * FROM usuarios WHERE nick=:nick AND password=:password";
         $stmt = $conexion->prepare($query);
-        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':nick', $nick);
         $stmt->bindParam(':password', $password);
         $stmt->execute();
 
         if ($stmt->rowCount() === 1) {
             // Inicio de sesión exitoso
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
             $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $username;
+            $_SESSION['nombre'] = $user['nombre'];  // Cambiado a 'nombre'
+            $_SESSION['nick'] = $nick;
             header('Location: index.php'); // Redirige a la página principal
             exit;
         } else {
@@ -51,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form method="post" action="login.php" class="row g-3 mt-3 border border-1 p-3 needs-validation" novalidate>
             <div class="col-6">
-                <label for="username" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
+                <label for="nick" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="nick" name="nick" placeholder="Usuario" required>
                 <div class="invalid-feedback">
                     Campo requerido
                 </div>

@@ -7,7 +7,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Resto del código de la página principal
+// Resto del código de la página 
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +27,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <div class="container bg-light" style="height: 100vh;">
         <div class="row bg-black" style="height:95px;">
             <div class="col-6">
-                <h2 class="text-light m-4 pt-1">Bienvenido, <?php echo $_SESSION['username']; ?>!</h2>
+                <h2 class="text-light m-4 pt-1">Bienvenido, <?php echo $_SESSION['nombre']; ?>!</h2>
             </div>
             <div class="col-6">
                 <a class="float-end m-4 pt-1" href="logout.php">Cerrar sesión</a>
