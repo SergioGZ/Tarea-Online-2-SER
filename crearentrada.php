@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include 'includes/header.html';?>
 
-        <div class="row">
+        <div class="row bg-light">
             <div class="col-12">
                 <form method="POST" action="crearentrada.php" enctype="multipart/form-data" class="p-5 m-5 needs-validation" novalidate>
                     <label class="form-label" for="titulo"><strong>Título:</strong></label>

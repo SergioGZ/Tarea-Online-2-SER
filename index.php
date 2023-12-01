@@ -49,7 +49,7 @@ try {
             </div>
         </div>
 
-        <div class="row">
+        <div class="row bg-light">
             <div class="col-12">
                 <?php
                     // Mostrar la tabla HTML con los resultados de la consulta
