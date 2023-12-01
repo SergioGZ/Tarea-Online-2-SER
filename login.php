@@ -17,8 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Inicio de sesión exitoso
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             $_SESSION['loggedin'] = true;
-            $_SESSION['nombre'] = $user['nombre'];  // Cambiado a 'nombre'
             $_SESSION['nick'] = $nick;
+            $_SESSION['nombre'] = $user['nombre'];
+            $_SESSION['id'] = $user['id'];
             header('Location: index.php'); // Redirige a la página principal
             exit;
         } else {
