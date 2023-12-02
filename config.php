@@ -16,6 +16,7 @@
             apellidos VARCHAR(50) NOT NULL,
             email VARCHAR(100) NOT NULL,
             password VARCHAR(255) NOT NULL,
+            rol INT NOT NULL,
             imagen_avatar VARCHAR(255) DEFAULT NULL
         )";
         $conexion->exec($sql);

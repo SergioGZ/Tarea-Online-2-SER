@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['nick'] = $nick;
             $_SESSION['nombre'] = $user['nombre'];
             $_SESSION['id'] = $user['id'];
+            $_SESSION['rol'] = $user['rol'];
             header('Location: index.php'); // Redirige a la página principal
             exit;
         } else {

@@ -10,19 +10,45 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 // Verificar si se ha proporcionado un ID válido en la URL
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $idEntrada = $_GET['id'];
+    $idEntrada = $_GET['id']; 
 
+    // Obtener los datos de la entrada con el ID proporcionado
     try {
-        // Realizar la acción de borrado en la base de datos
-        $queryBorrarEntrada = "DELETE FROM entradas WHERE ID = :id";
-        $stmt = $conexion->prepare($queryBorrarEntrada);
+        $queryObtenerEntrada = "SELECT * FROM entradas WHERE ID = :id";
+        $stmt = $conexion->prepare($queryObtenerEntrada);
         $stmt->bindParam(':id', $idEntrada);
         $stmt->execute();
+
+        if ($stmt->rowCount() === 1) {
+            $entrada = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //Se prohibe el acceso si no es el mismo usuario que la creó y no es administrador
+            if ($_SESSION['id'] !== $entrada['usuario_id']  && $_SESSION['rol'] != 1) {
+                header('Location: index.php');
+                exit;
+            }
+
+        } else {
+            echo "Consulta no encontrada.";
+            exit;
+        }
     } catch (PDOException $e) {
-        echo "Error al borrar la entrada: " . $e->getMessage();
+        echo "Error al obtener la entrada: " . $e->getMessage();
+        exit;
     }
 } else {
     echo "ID de entrada no válido.";
+    exit;
+}
+
+try {
+    // Realizar la acción de borrado en la base de datos
+    $queryBorrarEntrada = "DELETE FROM entradas WHERE ID = :id";
+    $stmt = $conexion->prepare($queryBorrarEntrada);
+    $stmt->bindParam(':id', $idEntrada);
+    $stmt->execute();
+} catch (PDOException $e) {
+    echo "Error al borrar la entrada: " . $e->getMessage();
 }
 ?>
 

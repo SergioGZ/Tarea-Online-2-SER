@@ -24,7 +24,13 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $titulo = $entrada['titulo'];
             $categoria_id = $entrada['categoria_id'];
             $descripcion = $entrada['descripcion'];
-            // Otros campos que puedas tener en tu formulario...
+
+            //Se prohibe el acceso si no es el mismo usuario que la creó y no es administrador
+            if ($_SESSION['id'] !== $entrada['usuario_id']  && $_SESSION['rol'] != 1) {
+                header('Location: index.php');
+                exit;
+            }
+
         } else {
             echo "Entrada no encontrada.";
             exit;

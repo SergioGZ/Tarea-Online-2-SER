@@ -12,7 +12,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 try {
     // Consulta SQL con INNER JOIN para obtener datos de entradas, categorías y usuarios
     $query = "
-        SELECT entradas.ID, entradas.titulo, entradas.descripcion, categorias.nombre AS categoria, usuarios.nick AS usuario_nick, entradas.fecha, entradas.imagen
+        SELECT entradas.ID, entradas.usuario_id, entradas.titulo, entradas.descripcion, categorias.nombre AS categoria, usuarios.nick AS usuario_nick, entradas.fecha, entradas.imagen
         FROM entradas
         INNER JOIN categorias ON entradas.categoria_id = categorias.id
         INNER JOIN usuarios ON entradas.usuario_id = usuarios.id
@@ -76,10 +76,16 @@ try {
                         <td>{$entrada['fecha']}</td>
                         <td><img src='{$entrada['imagen']}' alt='Sin imagen' style='max-width: 50px; max-height: 50px;'></td>
                         <td>
-                            <a href='listar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> 
-                            <a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a> 
-                            <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>
-                        </td>
+                            <a href='listar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> ";
+                            
+                            if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
+                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
+                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                            } else {
+                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
+                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                            }
+                        echo "</td>
                         </tr>";
                     }
 
