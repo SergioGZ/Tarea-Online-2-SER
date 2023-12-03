@@ -31,10 +31,10 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -56,7 +56,8 @@ try {
             // Mostrar la tabla HTML con los resultados de la consulta
             echo
             "<h1>Entradas</h1>
-                    <table id='tabla' class='table table-responsive table-striped col-12'>
+            <table id='tabla' class='table table-responsive table-striped datatable col-12'>
+                <thead>
                     <tr>
                         <th>ID</th>
                         <th>Título</th>
@@ -66,8 +67,10 @@ try {
                         <th>Fecha</th>
                         <th>Imagen</th>
                         <th>Operaciones</th>
-                    </tr>";
+                    </tr>
+                </thead>
 
+                <tbody>";
             while ($entrada = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 echo "<tr>
                         <td>{$entrada['ID']}</td>
@@ -80,28 +83,31 @@ try {
                         <td>
                             <a href='listar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> ";
 
-                if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
-                    echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
-                            <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
-                } else {
-                    echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
-                            <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
-                }
+                            if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
+                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
+                                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                            } else {
+                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
+                                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                            }
                 echo "</td>
-                        </tr>";
+                        </tr>
+                </tbody>";
             }
 
             echo "</table>";
             ?>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="http://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#tabla').DataTable({
-                dom: 'Qlfrtip'
-            });
+        var table = new DataTable('#tabla', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+            },
         });
-        alert("hola");
     </script>
 </body>
 
