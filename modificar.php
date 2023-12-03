@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':imagen', $imagen);
         $stmt->execute();
 
-        $confirmacion = '<div class="alert alert-success w-50 text-center">Entrada modificada correctamente</div>';
+        $confirmacion = '<div class="alert alert-success w-75 text-center">Entrada modificada correctamente</div>';
     } catch (PDOException $e) {
         echo "Error al actualizar la entrada: " . $e->getMessage();
     }
