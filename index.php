@@ -8,7 +8,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Resto del código de la página
 try {
     // Consulta SQL con INNER JOIN para obtener datos de entradas, categorías y usuarios
     $query = "
@@ -17,12 +16,26 @@ try {
         INNER JOIN categorias ON entradas.categoria_id = categorias.id
         INNER JOIN usuarios ON entradas.usuario_id = usuarios.id
     ";
-    $stmt = $conexion->query($query);
-    $stmt->execute();
+    $stmtEntradas = $conexion->query($query);
+    $stmtEntradas->execute();
 } catch (PDOException $e) {
-    echo "Error al realizar la consulta: " . $e->getMessage();
+    echo "Error al realizar la consulta de la tabla entradas: " . $e->getMessage();
 }
+
+try {
+    // Consulta SQL para tabla usuarios
+    $query = "
+        SELECT *
+        FROM usuarios
+    ";
+    $stmtUsuarios = $conexion->query($query);
+    $stmtUsuarios->execute();
+} catch (PDOException $e) {
+    echo "Error al realizar la consulta de la tabla usuarios: " . $e->getMessage();
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -43,17 +56,16 @@ try {
     <?php include 'includes/header.html'; ?>
 
     <div class="row">
-        <div class="col-12 w-50">
-            <ul class="list-group p-4 pt-lg-5 float-start">
-                <li class="list-group-item text-center"><a class="btn btn-primary" href="crearentrada.php">Añadir entrada</a></li>
-            </ul>
+        <div class="col-12 w-50 my-5">
+            <a class="btn btn-primary float-start text-center me-3" href="crearentrada.php">Añadir entrada</a>
+            <a class="btn btn-primary float-start text-center" href="crearusuario.php">Añadir usuario</a>
         </div>
     </div>
 
     <div class="row bg-light">
         <div class="col-12">
             <?php
-            // Mostrar la tabla HTML con los resultados de la consulta
+            // Mostrar la tabla entradas
             echo
             "<h1>Entradas</h1>
             <table id='tabla' class='table table-responsive table-striped datatable col-12'>
@@ -71,7 +83,7 @@ try {
                 </thead>
 
                 <tbody>";
-            while ($entrada = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            while ($entrada = $stmtEntradas->fetch(PDO::FETCH_ASSOC)) {
                 echo "<tr>
                         <td>{$entrada['ID']}</td>
                         <td>{$entrada['titulo']}</td>
@@ -85,27 +97,83 @@ try {
 
                             if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
                                 echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
-                                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                                        <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
                             } else {
                                 echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
-                                                <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                                        <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
                             }
                 echo "</td>
-                        </tr>
-                </tbody>";
+                        </tr>";
             }
-
-            echo "</table>";
+            
+            echo "</tbody>
+                </table>";
             ?>
         </div>
     </div>
+
+    <div class="row bg-light mt-5">
+        <div class="col-12">
+            <?php
+            // Mostrar la tabla usuarios
+            echo
+            "<h1>Usuarios</h1>
+            <table id='tabla2' class='table table-responsive table-striped datatable col-12'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nick</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Contraseña</th>
+                        <th>Rol</th>
+                        <th>Avatar</th>
+                        <th>Operaciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>";
+            while ($usuario = $stmtUsuarios->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>
+                        <td>{$usuario['id']}</td>
+                        <td>{$usuario['nick']}</td>
+                        <td>{$usuario['nombre']}</td>
+                        <td>{$usuario['apellidos']}</td>
+                        <td>{$usuario['email']}</td>
+                        <td>{$usuario['password']}</td>
+                        <td>{$usuario['rol']}</td>
+                        <td><img src='{$usuario['imagen_avatar']}' alt='Sin avatar' style='max-width: 50px; max-height: 50px;'></td>
+                        <td>";
+                            if ($_SESSION['id'] == $usuario['id'] || $_SESSION['rol'] == 1) {
+                                echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
+                                        <a href='borrar.php?id={$usuario['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                            } else {
+                                echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
+                                        <a href='borrar.php?id={$usuario['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                            }
+                echo "</td>
+                        </tr>";
+            }
+
+            echo "</tbody>
+                </table>";
+            ?>
+        </div>
+    </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="http://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         var table = new DataTable('#tabla', {
             language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+        });
+        var table2 = new DataTable('#tabla2', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
             },
         });
     </script>
