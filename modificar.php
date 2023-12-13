@@ -86,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Crear Entrada</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 
 <body class="bg-secondary">
@@ -112,7 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select><br>
 
                 <label class="form-label" for="descripcion"><strong>Descripción:</strong></label><br>
-                <textarea class="form-control" name="descripcion" rows="4" required><?php echo $descripcion; ?></textarea><br>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><?php echo $descripcion; ?></textarea><br>
+                <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+                <script>
+                        CKEDITOR.replace('descripcion');
+                </script>
 
                 <label class="form-label" for="imagen"><strong>Imagen:</strong></label>
                 <input class="form-control" type="file" name="imagen" accept="image/*">
@@ -149,6 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }, false);
         })();
     </script>
+
 </body>
 
 </html>

@@ -21,9 +21,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
         if ($stmt->rowCount() === 1) {
             $entrada = $stmt->fetch(PDO::FETCH_ASSOC);
-            $titulo = $entrada['titulo'];
-            $categoria_id = $entrada['categoria_id'];
-            $descripcion = $entrada['descripcion'];
 
             //Se prohibe el acceso si no es el mismo usuario que la creó y no es administrador
             if ($_SESSION['id'] !== $entrada['usuario_id']  && $_SESSION['rol'] != 1) {

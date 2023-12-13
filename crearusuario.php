@@ -65,19 +65,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-12">
             <form method="POST" action="crearusuario.php" enctype="multipart/form-data" class="p-5 m-5 needs-validation" novalidate>
                 <label class="form-label" for="nick"><strong>Nick:</strong></label>
-                <input class="form-control w-50" type="text" name="nick" required><br>
+                <input class="form-control w-50" type="text" name="nick" required pattern="[A-Za-z0-9_]{1,10}">
+                <div class="invalid-feedback">Longitud máxima de 10 caracteres. Alfanuméricos y guiones bajos</div><br/>
 
                 <label class="form-label" for="nombre"><strong>Nombre:</strong></label>
-                <input class="form-control w-50" type="text" name="nombre" required><br>
+                <input class="form-control w-50" type="text" name="nombre" required pattern="[A-Za-z\s]{1,20}">
+                <div class="invalid-feedback">Longitud máxima de 20. Solo letras y espacios</div><br/>
 
                 <label class="form-label" for="apellidos"><strong>Apellidos:</strong></label>
-                <input class="form-control w-50" type="text" name="apellidos" required><br>
+                <input class="form-control w-50" type="text" name="apellidos" required pattern="[A-Za-z\s]{1,40}">
+                <div class="invalid-feedback">Longitud máxima de 40. Solo letras y espacios</div><br/>
 
                 <label class="form-label" for="email"><strong>Email:</strong></label>
                 <input class="form-control w-50" type="email" name="email" required><br>
                 
                 <label class="form-label" for="password"><strong>Contraseña:</strong></label>
-                <input class="form-control w-50" type="password" name="password" required><br>
+                <input class="form-control w-50" type="password" name="password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
+                <div class="invalid-feedback">Debe contener al menos: 8 caracteres, una minúscula, una mayúscula, un dígito y un caracter especial [@$!%*?&]</div><br/>
 
                 <label class="form-label" for="rol"><strong>Rol:</strong></label>
                 <select class="form-select w-50" name="rol" required>

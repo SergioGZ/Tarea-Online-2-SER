@@ -63,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-12">
                 <form method="POST" action="crearentrada.php" enctype="multipart/form-data" class="p-5 m-5 needs-validation" novalidate>
                     <label class="form-label" for="titulo"><strong>Título:</strong></label>
-                    <input class="form-control w-50" type="text" name="titulo" required><br>
+                    <input class="form-control w-50" type="text" name="titulo" required pattern="[a-zA-Z0-9\s]{1,30}">
+                    <div class="invalid-feedback">Solo caracteres alfanuméricos. Longitud máxima de 30</div><br/>
 
                     <label class="form-label" for="categoria"><strong>Categoría:</strong></label>
                     <select class="form-select w-50" name="categoria" required>
@@ -78,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </select><br>
 
                     <label class="form-label" for="descripcion"><strong>Descripción:</strong></label><br>
-                    <textarea class="form-control" name="descripcion" rows="4" required></textarea><br>
+                    <textarea class="form-control" name="descripcion" rows="4" required maxlength="75"></textarea>
+                    <div class="invalid-feedback">Longitud máxima de 75</div><br/>
 
                     <label class="form-label" for="imagen"><strong>Imagen:</strong></label>
                     <input class="form-control" type="file" name="imagen" accept="image/*"><br>

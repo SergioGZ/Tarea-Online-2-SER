@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="row mt-3">
             <div class="col-12">
+                <?php echo $msjConexion; ?>
                 <h2 class="mt-3">Iniciar sesión</h2>
             </div>
         </div>
@@ -56,18 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="post" action="login.php" class="row g-3 mt-3 border border-1 p-3 needs-validation" novalidate>
             <div class="col-6">
                 <label for="nick" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="nick" name="nick" placeholder="Usuario" required>
-                <div class="invalid-feedback">
-                    Campo requerido
-                </div>
+                <input type="text" class="form-control" id="nick" name="nick" placeholder="Usuario" required pattern="[A-Za-z]{1,12}">
+                <div class="invalid-feedback">El nick debe contener entre 1 y 12 caracteres</div>
             </div>
 
             <div class="col-6">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
-                <div class="invalid-feedback">
-                    Campo requerido
-                </div>
+                <div class="invalid-feedback">Campo requerido</div>
             </div>
 
             <div class="col-12">

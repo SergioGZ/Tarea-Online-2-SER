@@ -34,6 +34,15 @@ try {
     echo "Error al realizar la consulta de la tabla usuarios: " . $e->getMessage();
 }
 
+try {
+    // Consulta SQL para tabla categorias
+    $query = "SELECT * FROM categorias";
+    $stmtCategorias = $conexion->query($query);
+    $stmtCategorias->execute();
+} catch (PDOException $e) {
+    echo "Error al realizar la consulta de la tabla usuarios: " . $e->getMessage();
+}
+
 ?>
 
 
@@ -58,7 +67,8 @@ try {
     <div class="row">
         <div class="col-12 w-50 my-5">
             <a class="btn btn-primary float-start text-center me-3" href="crearentrada.php">Añadir entrada</a>
-            <a class="btn btn-primary float-start text-center" href="crearusuario.php">Añadir usuario</a>
+            <a class="btn btn-primary float-start text-center me-3" href="crearusuario.php">Añadir usuario</a>
+            <a class="btn btn-primary float-start text-center" href="crearcategoria.php">Añadir categoría</a>
         </div>
     </div>
 
@@ -144,15 +154,54 @@ try {
                         <td>{$usuario['password']}</td>
                         <td>{$usuario['rol']}</td>
                         <td><img src='{$usuario['imagen_avatar']}' alt='Sin avatar' style='max-width: 50px; max-height: 50px;'></td>
-                        <td>";
+                        <td>
+                            <a href='listarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> ";
+
                             if ($_SESSION['id'] == $usuario['id'] || $_SESSION['rol'] == 1) {
                                 echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
-                                        <a href='borrar.php?id={$usuario['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                                        <a href='borrarUsuario.php?id={$usuario['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
                             } else {
                                 echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
-                                        <a href='borrar.php?id={$usuario['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                                        <a href='borrarUsuario.php?id={$usuario['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
                             }
                 echo "</td>
+                        </tr>";
+            }
+
+            echo "</tbody>
+                </table>";
+            ?>
+        </div>
+    </div>
+
+
+    <div class="row bg-light mt-5">
+        <div class="col-12">
+            <?php
+            // Mostrar la tabla categorias
+            echo
+            "<h1>Categorías</h1>
+            <table id='tabla3' class='table table-responsive table-striped datatable col-12'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th style='max-width:100px;'>Operaciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>";
+            while ($categoria = $stmtCategorias->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>
+                        <td>{$categoria['id']}</td>
+                        <td>{$categoria['nombre']}</td>
+                        <td>";
+                            if ($_SESSION['rol'] == 1) {
+                                echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                            } else {
+                                echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                            };
+                        echo "</td>
                         </tr>";
             }
 
@@ -172,6 +221,11 @@ try {
             },
         });
         var table2 = new DataTable('#tabla2', {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+        });
+        var table3 = new DataTable('#tabla3', {
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
             },
