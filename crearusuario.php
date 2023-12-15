@@ -22,8 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($_FILES['avatar']['tmp_name'], $avatar);
     }
 
-    // Puedes hacer validaciones adicionales aquí antes de insertar en la base de datos
-
     try {
         // Insertar nueva entrada en la tabla "usuarios"
         $queryInsertarUsuario = "

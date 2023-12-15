@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
+require 'TCPDF/tcpdf.php';
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -43,6 +44,54 @@ try {
     echo "Error al realizar la consulta de la tabla usuarios: " . $e->getMessage();
 }
 
+function generarPDF($stmtEntradas)
+{
+    // Crear nueva instancia de TCPDF
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+    // Establecer propiedades del documento
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Sergio');
+    $pdf->SetTitle('Entradas');
+
+    // Abrir el documento
+    $pdf->AddPage();
+
+    // Generar el HTML para la tabla de entradas
+    $html = "<h1>Entradas</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Fecha</th>
+                    </tr><br/><br/>
+                </thead>
+                <tbody>";
+    while ($entrada = $stmtEntradas->fetch(PDO::FETCH_ASSOC)) {
+        $html .= "<tr>
+                <td>{$entrada['ID']}</td>
+                <td>{$entrada['titulo']}</td>
+                <td>{$entrada['descripcion']}</td>
+                <td>{$entrada['fecha']}</td>";
+        $html .= "</tr><br/>";
+    }
+    $html .= "</tbody></table>";
+
+    // Agregar el HTML al documento
+    $pdf->writeHTML($html, true, false, true, false, '');
+
+    // Cerrar y guardar el documento
+    $pdf->Output('entradas.pdf', 'I');
+}
+
+// Verificar si se ha enviado la solicitud
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Llamar a la función para generar el PDF cuando se reciba la solicitud
+    generarPDF($stmtEntradas);
+}
+
 ?>
 
 
@@ -68,7 +117,10 @@ try {
         <div class="col-12 w-50 my-5">
             <a class="btn btn-primary float-start text-center me-3" href="crearentrada.php">Añadir entrada</a>
             <a class="btn btn-primary float-start text-center me-3" href="crearusuario.php">Añadir usuario</a>
-            <a class="btn btn-primary float-start text-center" href="crearcategoria.php">Añadir categoría</a>
+            <a class="btn btn-primary float-start text-center me-3" href="crearcategoria.php">Añadir categoría</a>
+            <form action="" method="post">
+                <button class="btn btn-warning" type="submit">Generar PDF</button>
+            </form>
         </div>
     </div>
 
@@ -105,17 +157,17 @@ try {
                         <td>
                             <a href='listar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> ";
 
-                            if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
-                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
+                if ($_SESSION['id'] == $entrada['usuario_id'] || $_SESSION['rol'] == 1) {
+                    echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
                                         <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
-                            } else {
-                                echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
+                } else {
+                    echo "<a href='modificar.php?id={$entrada['ID']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
                                         <a href='borrar.php?id={$entrada['ID']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
-                            }
+                }
                 echo "</td>
                         </tr>";
             }
-            
+
             echo "</tbody>
                 </table>";
             ?>
@@ -157,13 +209,13 @@ try {
                         <td>
                             <a href='listarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-eye-fill'></i></a> ";
 
-                            if ($_SESSION['id'] == $usuario['id'] || $_SESSION['rol'] == 1) {
-                                echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
+                if ($_SESSION['id'] == $usuario['id'] || $_SESSION['rol'] == 1) {
+                    echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary'><i class='bi bi-pencil-square'></i></a>
                                         <a href='borrarUsuario.php?id={$usuario['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
-                            } else {
-                                echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
+                } else {
+                    echo "<a href='modificarUsuario.php?id={$usuario['id']}' class='btn btn-primary disabled'><i class='bi bi-pencil-square'></i></a>
                                         <a href='borrarUsuario.php?id={$usuario['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
-                            }
+                }
                 echo "</td>
                         </tr>";
             }
@@ -196,12 +248,12 @@ try {
                         <td>{$categoria['id']}</td>
                         <td>{$categoria['nombre']}</td>
                         <td>";
-                            if ($_SESSION['rol'] == 1) {
-                                echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
-                            } else {
-                                echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
-                            };
-                        echo "</td>
+                if ($_SESSION['rol'] == 1) {
+                    echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                } else {
+                    echo "<a href='borrarCategoria.php?id={$categoria['id']}' class='btn btn-danger disabled'><i class='bi bi-trash'></i></a>";
+                };
+                echo "</td>
                         </tr>";
             }
 
